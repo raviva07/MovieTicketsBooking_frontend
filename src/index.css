@@ -1,0 +1,197 @@
+/* =========================
+   GLOBAL RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background-color: #f8f9fa; /* ✅ Bootstrap light background */
+  color: #212529;            /* ✅ Bootstrap default text */
+}
+
+/* =========================
+   ROOT APP CONTAINER
+========================= */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* =========================
+   MAIN CONTENT AREA
+========================= */
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+/* =========================
+   LINKS
+========================= */
+a {
+  text-decoration: none;
+  color: #0d6efd; /* Bootstrap primary */
+}
+
+a:hover {
+  color: #0a58ca; /* darker primary */
+}
+
+/* =========================
+   BUTTONS
+========================= */
+button, .btn {
+  cursor: pointer;
+  border-radius: 0.25rem !important;
+  font-weight: 500;
+  transition: transform 0.2s ease-in-out;
+}
+
+button:hover, .btn:hover {
+  transform: scale(1.02);
+}
+
+/* Primary Button */
+.btn-primary {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #0a58ca;
+}
+
+/* Danger Button */
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #bb2d3b;
+}
+
+/* Success Button */
+.btn-success {
+  background-color: #198754;
+  color: #fff;
+}
+
+.btn-success:hover {
+  background-color: #157347;
+}
+
+/* =========================
+   INPUT FIELDS
+========================= */
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+  background-color: #fff;
+  color: #212529;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+}
+
+/* =========================
+   CARD UI
+========================= */
+.card {
+  border-radius: 0.5rem !important;
+  border: 1px solid #dee2e6 !important;
+  background-color: #ffffff !important;
+  color: #212529 !important;
+  box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,.1);
+}
+
+/* =========================
+   FLEX HELPERS
+========================= */
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* =========================
+   TEXT UTILITIES
+========================= */
+.text-center { text-align: center; }
+.text-primary { color: #0d6efd !important; }
+.text-danger { color: #dc3545 !important; }
+.text-success { color: #198754 !important; }
+
+/* =========================
+   SPACING UTILITIES
+========================= */
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+
+/* =========================
+   SCROLLBAR (LIGHT THEME)
+========================= */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f9fa;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #adb5bd;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6c757d;
+}
+
+/* =========================
+   LOADING / CENTER SCREEN
+========================= */
+.center-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  font-size: 18px;
+  color: #6c757d;
+}

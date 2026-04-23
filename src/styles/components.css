@@ -1,0 +1,27 @@
+/* Global reusable component styles */
+
+.movie-card {
+  transition: transform 0.2s ease;
+}
+
+.movie-card:hover {
+  transform: scale(1.03);
+}
+
+.seat-card {
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.seat-card.available {
+  background-color: #e9f7ef;
+}
+
+.seat-card.locked {
+  background-color: #fff3cd;
+}
+
+.seat-card.booked {
+  background-color: #f8d7da;
+}

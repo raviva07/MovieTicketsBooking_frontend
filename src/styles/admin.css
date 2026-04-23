@@ -1,0 +1,26 @@
+/* Admin panel styles */
+
+.admin-dashboard .admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.admin-dashboard .card {
+  padding: 16px;
+  border-radius: 10px;
+}
+
+.manage-movies,
+.manage-theaters,
+.manage-shows,
+.manage-seats {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.seat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 80px);
+  gap: 8px;
+}
