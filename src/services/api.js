@@ -88,3 +88,10 @@ export const put = (url, data, config = {}) =>
 // DELETE
 export const del = (url, config = {}) =>
   api.delete(url, config);
+// ================= COMPATIBILITY HELPERS =================
+
+// For existing services using handleResponse
+export const handleResponse = (res) => res;
+
+// For existing services using handleError
+export const handleError = (err) => Promise.reject(err);
