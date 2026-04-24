@@ -1,20 +1,21 @@
 // src/services/api.js
 import axios from "axios";
 
-
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
-  "http://localhost:8080/api";
+  "https://movieticketsbooking-backend.onrender.com/api";
 
+// ✅ Create axios instance
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: false, 
+  withCredentials: false, // JWT-based auth (no cookies)
+  timeout: 15000, // prevent hanging requests
 });
 
-
+// ================= REQUEST INTERCEPTOR =================
 api.interceptors.request.use(
   (config) => {
     try {
@@ -25,6 +26,8 @@ api.interceptors.request.use(
 
         if (auth?.token) {
           config.headers = config.headers || {};
+
+          // ✅ Attach JWT token
           config.headers.Authorization = `${
             auth.type || "Bearer"
           } ${auth.token}`;
@@ -39,20 +42,49 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// ================= RESPONSE INTERCEPTOR =================
+api.interceptors.response.use(
+  (response) => {
+    // ✅ Directly return data
+    return response?.data ?? response;
+  },
+  (error) => {
+    // 🔥 Debug logs (VERY IMPORTANT)
+    console.error("API Error:", error);
 
-export const handleResponse = (res) => {
-  if (!res) return null;
-  return res.data !== undefined ? res.data : res;
-};
+    // ✅ Backend returned structured error
+    if (error?.response) {
+      return Promise.reject({
+        success: false,
+        status: error.response.status,
+        message:
+          error.response.data?.message ||
+          "Server error occurred",
+        data: error.response.data || null,
+      });
+    }
 
-
-export const handleError = (err) => {
-  if (err?.response?.data) {
-    return Promise.reject(err.response.data);
+    // ❌ Network error / timeout
+    return Promise.reject({
+      success: false,
+      message: "Network error. Please check your connection.",
+    });
   }
+);
 
-  return Promise.reject({
-    success: false,
-    message: err?.message || "Network Error",
-  });
-};
+// ================= OPTIONAL HELPERS =================
+
+// GET
+export const get = (url, config = {}) => api.get(url, config);
+
+// POST
+export const post = (url, data, config = {}) =>
+  api.post(url, data, config);
+
+// PUT
+export const put = (url, data, config = {}) =>
+  api.put(url, data, config);
+
+// DELETE
+export const del = (url, config = {}) =>
+  api.delete(url, config);
