@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
-  "https://movieticketsbooking-backend.onrender.com/api";
+  "https://movieticketsbooking-backend-1.onrender.com/api";
 
 // ✅ Create axios instance
 export const api = axios.create({

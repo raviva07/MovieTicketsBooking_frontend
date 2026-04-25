@@ -9,12 +9,7 @@ import NotificationBanner from "./components/NotificationBanner";
 // Routes
 import AppRoutes from "./routes/AppRoutes";
 
-/**
- * App
- * - Assumes Provider, BrowserRouter and Bootstrap (CSS + JS) are imported in index.js
- * - Keeps App purely presentational so store/router are not duplicated
- * - Uses Bootstrap layout utilities so footer sticks to bottom when content is short
- */
+
 const App = () => {
   return (
     <div className="d-flex flex-column min-vh-100">
