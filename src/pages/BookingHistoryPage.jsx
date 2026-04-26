@@ -9,7 +9,6 @@ const BookingHistoryPage = () => {
     enrichedList = [],
     loading,
     error,
-    pageable,
     fetchMyBookings,
     cancelBooking,
   } = useBookings();
@@ -18,12 +17,10 @@ const BookingHistoryPage = () => {
   const [size] = useState(10);
   const [processingId, setProcessingId] = useState(null);
 
-  // LOAD BOOKINGS
   useEffect(() => {
     fetchMyBookings({ page, size });
   }, [page, size]);
 
-  // SORT LATEST FIRST (extra safety)
   const bookings = useMemo(() => {
     return [...enrichedList].sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -46,7 +43,7 @@ const BookingHistoryPage = () => {
   };
 
   const handleTicket = (id) => {
-    navigate(`/bookings/${id}`); // FIXED ROUTE
+    navigate(`/bookings/${id}`);
   };
 
   const badge = (status) => {
@@ -57,6 +54,11 @@ const BookingHistoryPage = () => {
       EXPIRED: "bg-secondary",
     };
     return map[status] || "bg-dark";
+  };
+
+  // ✅ FIX 1: unified ticket visibility rule
+  const canViewTicket = (status) => {
+    return ["CONFIRMED", "EXPIRED", "CANCELLED"].includes(status);
   };
 
   return (
@@ -111,6 +113,7 @@ const BookingHistoryPage = () => {
 
                   <div className="mt-3 d-flex gap-2 justify-content-end">
 
+                    {/* PAY + CANCEL ONLY FOR PENDING */}
                     {b.status === "PENDING" && (
                       <>
                         <button
@@ -130,18 +133,13 @@ const BookingHistoryPage = () => {
                       </>
                     )}
 
-                    {b.status === "CONFIRMED" && (
+                    {/* ✅ FIX 2: Ticket ALWAYS visible (correct logic) */}
+                    {canViewTicket(b.status) && (
                       <button
                         className="btn btn-success btn-sm"
                         onClick={() => handleTicket(b.id)}
                       >
                         🎟 Ticket
-                      </button>
-                    )}
-
-                    {b.status === "EXPIRED" && (
-                      <button className="btn btn-secondary btn-sm">
-                        Expired
                       </button>
                     )}
 
@@ -176,4 +174,3 @@ const BookingHistoryPage = () => {
 };
 
 export default BookingHistoryPage;
-

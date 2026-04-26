@@ -15,6 +15,10 @@ import RegisterPage from "../pages/RegisterPage";
 import ShowPage from "../pages/ShowPage";
 import TheaterPage from "../pages/TheaterPage";
 
+/* 📩 NOTIFICATION FULL PAGE (IMPORTANT) */
+import NotificationInbox from "../pages/NotificationInbox";
+
+
 /* ================= ADMIN ================= */
 import AdminDashboard from "../admin/AdminDashboard";
 import ManageMovies from "../admin/ManageMovies";
@@ -33,11 +37,11 @@ const AppRoutes = () => {
   return (
     <Routes>
 
-      {/* 🔐 AUTH */}
+      {/* ================= AUTH ================= */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      {/* 👤 USER ROUTES */}
+      {/* ================= USER ================= */}
       <Route element={<ProtectedRoutes />}>
 
         {/* 🏠 HOME */}
@@ -55,24 +59,27 @@ const AppRoutes = () => {
         <Route path="/shows" element={<ShowPage />} />
         <Route path="/shows/:id" element={<ShowPage />} />
 
-        {/* 💺 SEAT BOOKING (FIXED FLOW) */}
+        {/* 💺 SEATS */}
         <Route path="/shows/:id/seats" element={<SeatBookingPage />} />
 
-        {/* 💳 PAYMENT (FIXED FLOW) */}
+        {/* 💳 PAYMENT */}
         <Route path="/payments/:bookingId" element={<PaymentPage />} />
 
         {/* 📜 BOOKINGS */}
         <Route path="/bookings" element={<BookingHistoryPage />} />
         <Route path="/bookings/:id" element={<BookingTicketPage />} />
 
-
         {/* 👤 PROFILE */}
         <Route path="/profile" element={<ProfilePage />} />
 
+        {/* 📩 NOTIFICATION PAGE (NEW FIX) */}
+        <Route path="/notifications" element={<NotificationInbox />} />
+
       </Route>
 
-      {/* 👑 ADMIN */}
+      {/* ================= ADMIN ================= */}
       <Route element={<AdminRoutes />}>
+
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/movies" element={<ManageMovies />} />
         <Route path="/admin/theaters" element={<ManageTheaters />} />
@@ -80,10 +87,11 @@ const AppRoutes = () => {
         <Route path="/admin/seats" element={<ManageSeats />} />
         <Route path="/admin/bookings" element={<ManageBookings />} />
         <Route path="/admin/bookings/:id" element={<BookingTicketPage />} />
-        <Route path="/admin/users" element={<ManageUsers />} />      
+        <Route path="/admin/users" element={<ManageUsers />} />
+
       </Route>
 
-      {/* 🚫 FALLBACK */}
+      {/* ================= DEFAULT ================= */}
       <Route path="*" element={<Navigate to="/login" replace />} />
 
     </Routes>

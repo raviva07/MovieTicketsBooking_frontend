@@ -1,50 +1,28 @@
 // src/services/notificationService.js
-import { api, handleResponse, handleError } from "./api";
-
-/**
- * notificationService
- * - POST   /api/notifications           -> send notification (ADMIN)
- * - GET    /api/notifications/my        -> get current user's notifications (USER)
- * - GET    /api/notifications/user/{id} -> get notifications for a user (ADMIN)
- * - PUT    /api/notifications/{id}/read -> mark notification as read (USER|ADMIN)
- *
- * All responses are normalized via handleResponse / handleError.
- */
+import { get, put } from "./api";
 
 const notificationService = {
-  sendNotification: async (payload) => {
+
+  // ✅ FETCH MY NOTIFICATIONS
+  async fetchMyNotifications() {
     try {
-      const res = await api.post("/notifications", payload);
-      return handleResponse(res);
-    } catch (err) {
-      return handleError(err);
+      const res = await get("/notifications/my");
+
+      // 🔥 IMPORTANT: return FULL response
+      return res; // NOT res.data
+    } catch (error) {
+      console.error("❌ Fetch notifications error:", error);
+      throw error;
     }
   },
 
-  fetchMyNotifications: async () => {
+  // ✅ MARK AS READ
+  async markAsRead(id) {
     try {
-      const res = await api.get("/notifications/my");
-      return handleResponse(res);
-    } catch (err) {
-      return handleError(err);
-    }
-  },
-
-  fetchNotificationsByUser: async (userId) => {
-    try {
-      const res = await api.get(`/notifications/user/${userId}`);
-      return handleResponse(res);
-    } catch (err) {
-      return handleError(err);
-    }
-  },
-
-  markAsRead: async (id) => {
-    try {
-      const res = await api.put(`/notifications/${id}/read`);
-      return handleResponse(res);
-    } catch (err) {
-      return handleError(err);
+      return await put(`/notifications/${id}/read`);
+    } catch (error) {
+      console.error("❌ Mark read error:", error);
+      throw error;
     }
   },
 };

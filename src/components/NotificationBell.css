@@ -1,0 +1,93 @@
+.gmail-notif-container {
+  position: relative;
+}
+
+/* 📩 Mail icon */
+.gmail-icon {
+  font-size: 22px;
+  cursor: pointer;
+  position: relative;
+  color: white;
+}
+
+/* 🔴 badge */
+.gmail-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background: #d93025;
+  color: white;
+  font-size: 11px;
+  border-radius: 50%;
+  padding: 2px 6px;
+}
+
+/* 📬 dropdown */
+.gmail-dropdown {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  width: 340px;
+  max-height: 420px;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+}
+
+/* header */
+.gmail-header {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-weight: bold;
+}
+
+/* empty */
+.gmail-empty {
+  padding: 20px;
+  text-align: center;
+  color: gray;
+}
+
+/* item */
+.gmail-item {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f1f1;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.gmail-item:hover {
+  background: #f5f7fb;
+}
+
+.unread {
+  background: #eef3ff;
+  font-weight: 600;
+}
+
+.read {
+  opacity: 0.7;
+}
+
+/* title */
+.gmail-title {
+  font-size: 14px;
+}
+
+/* message */
+.gmail-msg {
+  font-size: 13px;
+  color: #444;
+  margin-top: 4px;
+}
+
+/* footer */
+.gmail-footer {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #888;
+  display: flex;
+  justify-content: space-between;
+}

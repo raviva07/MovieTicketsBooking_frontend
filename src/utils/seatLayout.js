@@ -20,12 +20,11 @@ const SeatLayout = ({ seats = [], selectedIds = [], setSelectedIds }) => {
   const total = calculateTotal(selectedSeats);
 
   return (
-    <div className="container py-4">
+    <div className="container py-4 seat-container">
 
       {/* SCREEN */}
       <div className="text-center mb-4">
-        <div className="bg-light rounded shadow-sm mx-auto"
-             style={{ height: 8, width: "60%" }} />
+        <div className="screen-bar mx-auto" />
         <small className="text-muted">All eyes this way please</small>
       </div>
 
@@ -43,11 +42,12 @@ const SeatLayout = ({ seats = [], selectedIds = [], setSelectedIds }) => {
 
           <div className="fw-bold mb-2">Row {row}</div>
 
-          <div className="d-flex justify-content-center flex-wrap gap-2">
+          {/* 🔥 FIXED ROW */}
+          <div className="seat-row">
 
             {seats.map((seat, index) => {
 
-              const isAisle = index === 3 || index === 7; // aisle gap
+              const isAisle = index === 3 || index === 7;
 
               return (
                 <React.Fragment key={seat.id}>
@@ -58,7 +58,7 @@ const SeatLayout = ({ seats = [], selectedIds = [], setSelectedIds }) => {
                     {seat.seatNumber}
                   </button>
 
-                  {isAisle && <div style={{ width: 20 }} />}
+                  {isAisle && <div className="aisle-gap" />}
                 </React.Fragment>
               );
             })}
@@ -85,12 +85,54 @@ const SeatLayout = ({ seats = [], selectedIds = [], setSelectedIds }) => {
 
       {/* STYLES */}
       <style>{`
+        .seat-container {
+          overflow-x: auto;
+        }
+
+        .screen-bar {
+          height: 8px;
+          width: 60%;
+          background: linear-gradient(to right, #fff, #bbb);
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        /* 🔥 FIX: NO WRAP */
+        .seat-row {
+          display: flex;
+          justify-content: flex-start;
+          flex-wrap: nowrap;
+          gap: 8px;
+          overflow-x: auto;
+          padding-bottom: 6px;
+        }
+
+        .seat-row::-webkit-scrollbar {
+          height: 6px;
+        }
+
+        .seat-row::-webkit-scrollbar-thumb {
+          background: #adb5bd;
+          border-radius: 10px;
+        }
+
+        .aisle-gap {
+          width: 20px;
+          flex-shrink: 0;
+        }
+
         .seat-btn {
           width: 42px;
           height: 42px;
           font-size: 11px;
           border-radius: 6px;
           padding: 0;
+          flex-shrink: 0; /* 🔥 prevents shrink */
+          transition: all 0.2s ease;
+        }
+
+        .seat-btn:hover {
+          transform: scale(1.1);
         }
 
         .seat-available {

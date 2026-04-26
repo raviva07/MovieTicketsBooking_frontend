@@ -1,78 +1,68 @@
+// src/hooks/useNotifications.js
 import { useSelector, useDispatch } from "react-redux";
+import { useMemo } from "react";
 import {
-  addLocal,                // ✅ import properly
+  addLocal,
   removeNotification,
   clearNotifications,
 } from "../store/notificationSlice";
 
 const useNotifications = () => {
-  const { list = [], myList = [] } = useSelector(
-    (s) => s.notification || {}
-  );
-
   const dispatch = useDispatch();
 
-  // 🔥 merge + avoid duplicates (optional safe handling)
-  const notifications = [...list, ...myList].filter(
-    (v, i, arr) => arr.findIndex((n) => n.id === v.id) === i
-  );
+  // ✅ SAFE STATE ACCESS
+  const list = useSelector((s) => s.notification?.list || []);
+  const myList = useSelector((s) => s.notification?.myList || []);
+
+  // ✅ MERGE + REMOVE DUPLICATES
+  const notifications = useMemo(() => {
+    const merged = [...list, ...myList];
+
+    const unique = [];
+    const seen = new Set();
+
+    for (let n of merged) {
+      if (!seen.has(n.id)) {
+        seen.add(n.id);
+        unique.push(n);
+      }
+    }
+
+    return unique;
+  }, [list, myList]);
 
   return {
     notifications,
 
-    // ✅ generic push
-    push: (payload) => {
-      dispatch(
-        addLocal({
-          id: Date.now().toString(),
-          title: payload.title || "Notification",
-          message: payload.message,
-          type: payload.type || "info",
-        })
-      );
+    // ================= PUSH =================
+    push: ({ title = "Notification", message, type = "info" }) => {
+      dispatch(addLocal({ title, message, type }));
     },
 
-    // ✅ success
+    // ================= SUCCESS =================
     success: (message, title = "Success") => {
-      dispatch(
-        addLocal({
-          id: Date.now().toString(),
-          title,
-          message,
-          type: "success",
-        })
-      );
+      dispatch(addLocal({ title, message, type: "success" }));
     },
 
-    // ✅ error
+    // ================= ERROR =================
     error: (message, title = "Error") => {
-      dispatch(
-        addLocal({
-          id: Date.now().toString(),
-          title,
-          message,
-          type: "danger", // bootstrap uses danger
-        })
-      );
+      dispatch(addLocal({ title, message, type: "danger" })); // bootstrap
     },
 
-    // ✅ info
+    // ================= INFO =================
     info: (message, title = "Info") => {
-      dispatch(
-        addLocal({
-          id: Date.now().toString(),
-          title,
-          message,
-          type: "info",
-        })
-      );
+      dispatch(addLocal({ title, message, type: "info" }));
     },
 
-    // ✅ remove
-    remove: (id) => dispatch(removeNotification(id)),
+    // ================= REMOVE =================
+    remove: (id) => {
+      dispatch(removeNotification(id));
+    },
 
-    // ✅ clear all
-    clear: () => dispatch(clearNotifications()),
+    // ================= CLEAR =================
+    clear: () => {
+      dispatch(clearNotifications());
+    },
   };
 };
 

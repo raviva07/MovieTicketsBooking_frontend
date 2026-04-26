@@ -2,55 +2,68 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+
 import store from "./store/store";
 import AppRoutes from "./routes/AppRoutes";
 
-// ✅ ADD NAVBAR
+// ✅ GLOBAL COMPONENTS
 import Navbar from "./components/Navbar";
+import NotificationBanner from "./components/NotificationBanner";
 
-// styles
+// ✅ STYLES
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/components.css";
 import "./styles/admin.css";
 import "./index.css";
 
-// Error Boundary
+// ✅ UTILITIES
 import ErrorBoundary from "./utils/ErrorBoundary";
-
-// Auth restore
 import { loadAuth } from "./utils/auth";
 import { setAuthFromStorage } from "./store/authSlice";
-import NotificationBanner from "./components/NotificationBanner";
+
+// ================= ROOT =================
 const container = document.getElementById("root");
 
 if (!container) {
   throw new Error("Root container missing in index.html");
 }
 
+// ================= AUTH RESTORE =================
 // 🔥 Restore auth BEFORE render
 const savedAuth = loadAuth();
 if (savedAuth?.data) {
   store.dispatch(setAuthFromStorage(savedAuth.data));
 }
 
+// ================= APP =================
 const root = createRoot(container);
 
 const App = (
   <Provider store={store}>
     <BrowserRouter>
       <ErrorBoundary>
-        {/* ✅ GLOBAL NAVBAR (FIXED) */}
+
+        {/* ✅ GLOBAL NAVBAR */}
         <Navbar />
+
+        {/* 🔔 GLOBAL NOTIFICATION BANNER (TOAST / ALERT TYPE) */}
         <NotificationBanner />
+
         {/* ✅ ROUTES */}
         <AppRoutes />
+
       </ErrorBoundary>
     </BrowserRouter>
   </Provider>
 );
 
-if (import.meta.env.MODE === "development") {
-  root.render(<React.StrictMode>{App}</React.StrictMode>);
-} else {
-  root.render(App);
-}
+// ================= RENDER =================
+const isDev = import.meta.env.MODE === "development";
+
+root.render(
+  isDev ? (
+    <React.StrictMode>{App}</React.StrictMode>
+  ) : (
+    App
+  )
+);

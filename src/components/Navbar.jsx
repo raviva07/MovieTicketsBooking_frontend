@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
+import {
+  fetchMyNotifications,
+  markNotificationAsRead,
+} from "../store/notificationSlice";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const auth = useSelector((s) => s.auth || {});
+  const { myList = [] } = useSelector((s) => s.notification || {});
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -24,7 +31,22 @@ const Navbar = () => {
 
   const activeLink = ({ isActive }) =>
     `nav-link ${isActive ? "active fw-semibold text-warning" : ""}`;
-  
+
+  // ================= FETCH + AUTO REFRESH =================
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(fetchMyNotifications());
+
+      const interval = setInterval(() => {
+        dispatch(fetchMyNotifications());
+      }, 15000); // 🔥 refresh every 15 sec
+
+      return () => clearInterval(interval);
+    }
+  }, [dispatch, isLoggedIn]);
+
+  // ================= UNREAD COUNT =================
+  const unreadCount = myList.filter((n) => !n.read).length;
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
@@ -51,7 +73,7 @@ const Navbar = () => {
         {/* MENU */}
         <div className={`collapse navbar-collapse ${open ? "show" : ""}`}>
 
-          {/* LEFT SIDE */}
+          {/* ================= LEFT SIDE ================= */}
           <ul className="navbar-nav me-auto">
 
             {/* USER NAV */}
@@ -109,13 +131,12 @@ const Navbar = () => {
                     Shows
                   </NavLink>
                 </li>
-<li className="nav-item">
-  <NavLink className="nav-link" to="/admin/seats">
-    Manage Seats
-  </NavLink>
-</li>
 
-                
+                <li className="nav-item">
+                  <NavLink to="/admin/seats" className={activeLink} onClick={closeMenu}>
+                    Manage Seats
+                  </NavLink>
+                </li>
 
                 <li className="nav-item">
                   <NavLink to="/admin/bookings" className={activeLink} onClick={closeMenu}>
@@ -132,11 +153,100 @@ const Navbar = () => {
             )}
           </ul>
 
-          {/* RIGHT SIDE */}
+          {/* ================= RIGHT SIDE ================= */}
           <ul className="navbar-nav ms-auto">
 
             {isLoggedIn ? (
               <>
+
+                {/* 🔔 NOTIFICATION BELL (FIXED) */}
+                {!isAdmin && (
+                  <li className="nav-item dropdown me-3 position-relative">
+
+                    <button
+                      className="btn btn-dark position-relative"
+                      onClick={() => setShowNotifications(!showNotifications)}
+                    >
+                      📩
+                      {unreadCount > 0 && (
+                        <span
+                          className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                          style={{ fontSize: "10px" }}
+                        >
+                          {unreadCount}
+                        </span>
+                      )}
+                    </button>
+
+                    {/* DROPDOWN */}
+                    {showNotifications && (
+                      <div
+                        className="dropdown-menu dropdown-menu-end show p-2"
+                        style={{
+                          width: "320px",
+                          maxHeight: "400px",
+                          overflowY: "auto",
+                        }}
+                      >
+                        {/* HEADER */}
+                        <div className="d-flex justify-content-between align-items-center px-2 mb-2">
+                          <strong>Inbox</strong>
+                          <span
+                            style={{ cursor: "pointer" }}
+                            onClick={() => setShowNotifications(false)}
+                          >
+                            ✖
+                          </span>
+                        </div>
+
+                        {/* EMPTY */}
+                        {myList.length === 0 && (
+                          <p className="text-muted px-2">No notifications</p>
+                        )}
+
+                        {/* LIST */}
+                        {myList.slice(0, 5).map((n) => (
+                          <div
+                            key={n.id}
+                            className={`dropdown-item small ${
+                              !n.read ? "bg-light fw-bold" : ""
+                            }`}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              dispatch(markNotificationAsRead(n.id));
+                              navigate("/notifications"); // 🔥 go to inbox
+                              setShowNotifications(false);
+                            }}
+                          >
+                            <div>{n.title}</div>
+
+                            <div className="text-muted">
+                              {n.message?.length > 40
+                                ? n.message.slice(0, 40) + "..."
+                                : n.message}
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* VIEW ALL */}
+                        {myList.length > 5 && (
+                          <div className="text-center mt-2">
+                            <button
+                              className="btn btn-sm btn-outline-primary"
+                              onClick={() => {
+                                navigate("/notifications");
+                                setShowNotifications(false);
+                              }}
+                            >
+                              View All
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </li>
+                )}
+
                 {/* USER ONLY */}
                 {!isAdmin && (
                   <li className="nav-item">

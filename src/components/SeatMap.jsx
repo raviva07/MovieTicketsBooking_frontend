@@ -97,6 +97,7 @@ const SeatMap = ({ seats = [], onToggle, currentUser, loading }) => {
           background: #0f172a;
           color: white;
           border-radius: 12px;
+          overflow-x: auto; /* ✅ prevents layout breaking */
         }
 
         .screen-container {
@@ -144,15 +145,29 @@ const SeatMap = ({ seats = [], onToggle, currentUser, loading }) => {
           color: #cbd5f5;
         }
 
+        /* ✅ FIXED: no wrapping, horizontal scroll */
         .seat-row {
           display: flex;
-          justify-content: center;
-          flex-wrap: wrap;
+          justify-content: flex-start;
+          flex-wrap: nowrap;          /* 🔥 MAIN FIX */
           gap: 8px;
+          overflow-x: auto;           /* 🔥 scroll instead of break */
+          padding-bottom: 6px;
+        }
+
+        /* ✅ scrollbar styling */
+        .seat-row::-webkit-scrollbar {
+          height: 6px;
+        }
+
+        .seat-row::-webkit-scrollbar-thumb {
+          background: #475569;
+          border-radius: 10px;
         }
 
         .aisle-gap {
           width: 20px;
+          flex-shrink: 0;
         }
 
         .seat {
@@ -163,6 +178,7 @@ const SeatMap = ({ seats = [], onToggle, currentUser, loading }) => {
           font-size: 11px;
           cursor: pointer;
           transition: all 0.2s ease;
+          flex-shrink: 0; /* 🔥 prevents shrinking */
         }
 
         .seat:hover {
